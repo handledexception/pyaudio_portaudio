@@ -43,8 +43,6 @@ __version__ = "0.2.9"
 #
 # % python setup.py build --static-link
 #
-# Specify the environment variable PORTAUDIO_PATH with the build tree
-# of PortAudio.
 
 STATIC_LINKING = False
 
@@ -52,7 +50,7 @@ if "--static-link" in sys.argv:
     STATIC_LINKING = True
     sys.argv.remove("--static-link")
 
-portaudio_path = os.environ.get("PORTAUDIO_PATH", "./portaudio-v19")
+portaudio_path = "./portaudio-v19"
 mac_sysroot_path = os.environ.get("SYSROOT_PATH", None)
 
 pyaudio_module_sources = ['src/_portaudiomodule.c']
@@ -79,7 +77,7 @@ if not STATIC_LINKING:
 else:
     include_dirs = [os.path.join(portaudio_path, 'include/')]
     extra_link_args = [
-        os.path.join(portaudio_path, 'lib/.libs/libportaudio.a')
+        os.path.join(portaudio_path, 'msvc/x64/Debug/portaudio.lib')
         ]
 
     # platform specific configuration
@@ -94,8 +92,8 @@ else:
     elif sys.platform == 'win32':
         # i.e., Win32 Python with mingw32
         # run: python setup.py build -cmingw32
-        external_libraries += ["winmm","ole32","uuid"]
-        extra_link_args += ["-lwinmm","-lole32","-luuid"]
+        external_libraries += ["winmm","ole32","uuid","advapi32","user32"] 
+        #extra_link_args += ["-lwinmm","-lole32","-luuid"]
     elif sys.platform == 'linux2':
         extra_link_args += ['-lrt', '-lm', '-lpthread']
         # GNU/Linux has several audio systems (backends) available; be
