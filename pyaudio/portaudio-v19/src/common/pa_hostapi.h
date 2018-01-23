@@ -93,7 +93,7 @@ are defaulted to 1.
 #endif 
 
 #ifndef PA_USE_WASAPI
-#define PA_USE_WASAPI 0
+#define PA_USE_WASAPI 1
 #elif (PA_USE_WASAPI != 0) && (PA_USE_WASAPI != 1)
 #undef PA_USE_WASAPI
 #define PA_USE_WASAPI 1

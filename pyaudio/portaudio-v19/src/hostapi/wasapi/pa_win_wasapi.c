@@ -54,7 +54,7 @@
 #include <Audioclient.h>
 #include <endpointvolume.h>
 #define INITGUID
-#include <Functiondiscoverykeys_devpkey.h>
+#include <functiondiscoverykeys.h> // including functiondiscoverykeys_devpkey.h directly just caused a bunch of compiler warnings in VS2015
 #include <mmdeviceapi.h>
 #include <devicetopology.h>
 #undef INITGUID
@@ -87,6 +87,8 @@
 #include "pa_win_coinitialize.h"
 
 //#ifndef _AVRT_ //<< fix MinGW dummy compile by defining missing type: AVRT_PRIORITY
+// if this is only for mingw then we should not redefine it for MSVC
+#ifndef _MSC_VER
     typedef enum _AVRT_PRIORITY
     {
         AVRT_PRIORITY_LOW = -1,
@@ -94,6 +96,7 @@
         AVRT_PRIORITY_HIGH,
         AVRT_PRIORITY_CRITICAL
     } AVRT_PRIORITY, *PAVRT_PRIORITY;
+#endif
 //#endif
 
 #ifndef NTDDI_VERSION
@@ -1061,7 +1064,8 @@ static MixMonoToStereoF _GetMonoToStereoMixer(PaSampleFormat format, EMixerDir d
 	return NULL;
 }
 
-wchar_t* wcsncpy (wchar_t* destination, const wchar_t* source, size_t num) {
+// commenting this out due to redefinition causing C4274 warning
+/* wchar_t* wcsncpy (wchar_t* destination, const wchar_t* source, size_t num) {
 	size_t i;
 
 	for (i = 0; i < num && source[i] != 0; i++) {
@@ -1073,7 +1077,7 @@ wchar_t* wcsncpy (wchar_t* destination, const wchar_t* source, size_t num) {
 	}
 
 	return destination;
-}
+} */
 
 // ------------------------------------------------------------------------------------------
 PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex hostApiIndex )
